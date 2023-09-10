@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
 
 export default function Home() {
 	const [recipes, setRecipes] = useState([]);
+	const [cookies] = useCookies('access_token');
 	const [savedRecipes, setSavedRecipes] = useState([]);
 	const userId = localStorage.getItem('userId');
 
 	const saveRecipe = async (recipeId) => {
 		try {
-			await axios.put('http://localhost:4000/recipes', {
-				userId,
-				recipeId,
-			});
+			await axios.put(
+				'http://localhost:4000/recipes',
+				{
+					userId,
+					recipeId,
+				},
+				{
+					headers: {
+						authorization: cookies.access_token,
+					},
+				}
+			);
 			fetchSavedRecipes(userId);
 		} catch (error) {
 			console.log(error);
@@ -30,7 +40,12 @@ export default function Home() {
 	const fetchSavedRecipes = async (id) => {
 		try {
 			const { data } = await axios.get(
-				`http://localhost:4000/recipes/savedRecipes/ids/${userId}`
+				`http://localhost:4000/recipes/savedRecipes/ids/${userId}`,
+				{
+					headers: {
+						authorization: cookies.access_token,
+					},
+				}
 			);
 			setSavedRecipes(data.savedRecipes);
 		} catch (error) {
@@ -39,9 +54,12 @@ export default function Home() {
 	};
 
 	useEffect(() => {
-		fetchSavedRecipes(userId);
 		fetchRecipes();
+		if (cookies.access_token) {
+			fetchSavedRecipes(userId);
+		}
 	}, []);
+
 	return (
 		<div className="recipe-container">
 			<h2>Recipes</h2>
@@ -51,12 +69,14 @@ export default function Home() {
 						<p>{savedRecipes.includes(recipe._id)}</p>
 						<div>
 							<h2>{recipe.name}</h2>
-							{savedRecipes.includes(recipe._id) ? (
+							{savedRecipes.includes(recipe._id) && cookies.access_token ? (
 								<div>Already Saved</div>
 							) : (
-								<button onClick={saveRecipe.bind(this, recipe._id)}>
-									Save
-								</button>
+								cookies.access_token && (
+									<button onClick={saveRecipe.bind(this, recipe._id)}>
+										Save
+									</button>
+								)
 							)}
 						</div>
 						<h4>Ingredients:</h4>

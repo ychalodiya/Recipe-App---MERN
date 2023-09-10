@@ -14,10 +14,12 @@ export default function Navbar() {
 	return (
 		<div className="navbar">
 			<Link to="/">Home</Link>
-			<Link to="/create-recipe">Create Recipe</Link>
-			<Link to="/saved-recipes">Saved Recipes</Link>
 			{cookies.access_token ? (
-				<a onClick={clickHandler}>Logout</a>
+				<>
+					<Link to="/create-recipe">Create Recipe</Link>
+					<Link to="/saved-recipes">Saved Recipes</Link>
+					<a onClick={clickHandler}>Logout</a>
+				</>
 			) : (
 				<Link to="/login">Login/Register</Link>
 			)}

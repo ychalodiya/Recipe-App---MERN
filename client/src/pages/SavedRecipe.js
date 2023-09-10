@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 import axios from 'axios';
 
 export default function SavedRecipe() {
 	const [savedRecipes, setSavedRecipes] = useState([]);
+	const [cookies] = useCookies('access_token');
 	const userId = localStorage.getItem('userId');
 
 	const fetchSavedRecipes = async () => {
 		const { data } = await axios.get(
-			`http://localhost:4000/recipes/savedRecipes/${userId}`
+			`http://localhost:4000/recipes/savedRecipes/${userId}`,
+			{
+				headers: {
+					authorization: cookies.access_token,
+				},
+			}
 		);
 
 		setSavedRecipes(data.savedRecipes);

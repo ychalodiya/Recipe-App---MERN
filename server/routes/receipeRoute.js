@@ -1,6 +1,7 @@
 import express from 'express';
 import recipeModel from '../models/recipeModel.js';
 import userModel from '../models/userModel.js';
+import { isAuth } from '../middleware/isAuth.js/isAuth.js';
 
 const recipeRouter = express.Router();
 
@@ -13,7 +14,7 @@ recipeRouter.get('/', async (req, res) => {
 	}
 });
 
-recipeRouter.post('/', async (req, res) => {
+recipeRouter.post('/', isAuth, async (req, res) => {
 	try {
 		const newRecipe = new recipeModel(req.body);
 		await newRecipe.save();
@@ -25,7 +26,7 @@ recipeRouter.post('/', async (req, res) => {
 	}
 });
 
-recipeRouter.put('/', async (req, res) => {
+recipeRouter.put('/', isAuth, async (req, res) => {
 	try {
 		const recipe = await recipeModel.findById(req.body.recipeId);
 		const user = await userModel.findById(req.body.userId);
@@ -40,7 +41,7 @@ recipeRouter.put('/', async (req, res) => {
 	}
 });
 
-recipeRouter.get('/savedRecipes/ids/:userId', async (req, res) => {
+recipeRouter.get('/savedRecipes/ids/:userId', isAuth, async (req, res) => {
 	try {
 		const user = await userModel.findById(req.params.userId);
 		return res.status(200).json({
@@ -52,7 +53,7 @@ recipeRouter.get('/savedRecipes/ids/:userId', async (req, res) => {
 	}
 });
 
-recipeRouter.get('/savedRecipes/:userId', async (req, res) => {
+recipeRouter.get('/savedRecipes/:userId', isAuth, async (req, res) => {
 	try {
 		const user = await userModel.findById(req.params.userId);
 		const savedRecipes = await recipeModel.find({
