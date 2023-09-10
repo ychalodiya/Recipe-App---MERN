@@ -1,17 +1,20 @@
 import mongoose from 'mongoose';
 
 const recipeSchema = new mongoose.Schema({
-	username: {
-		type: String,
-		required: true,
-		unique: true,
-	},
-	email: {
+	name: {
 		type: String,
 		required: true,
 	},
-	password: {
-		type: String,
+	ingredients: [{ type: String, required: true }],
+	instructions: { type: String, required: true },
+	img: { type: String, required: true },
+	cookingTime: {
+		type: Number,
+		required: true,
+	},
+	owner: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'users',
 		required: true,
 	},
 });

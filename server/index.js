@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/auth', userRouter);
+app.use('/recipes', recipeRouter);
 
 mongoose
 	.connect(process.env.MONGODB_URI)

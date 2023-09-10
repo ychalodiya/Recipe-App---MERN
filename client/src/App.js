@@ -4,7 +4,7 @@ import Home from './pages/Home';
 import CreateRecipe from './pages/CreateRecipe';
 import SavedRecipe from './pages/SavedRecipe';
 import Navbar from './components/navbar';
-import Login from './components/login';
+import Login from './pages/login';
 import Register from './components/register';
 
 function App() {
