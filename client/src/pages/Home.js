@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
+import { toast } from 'react-toastify';
 
 export default function Home() {
 	const [recipes, setRecipes] = useState([]);
 	const [cookies] = useCookies('access_token');
 	const [savedRecipes, setSavedRecipes] = useState([]);
 	const userId = localStorage.getItem('userId');
-
 	const saveRecipe = async (recipeId) => {
 		try {
 			await axios.put(
@@ -23,8 +23,9 @@ export default function Home() {
 				}
 			);
 			fetchSavedRecipes(userId);
+			toast.success('Recipe saved successfully');
 		} catch (error) {
-			console.log(error);
+			toast.error(error.message);
 		}
 	};
 
@@ -33,7 +34,7 @@ export default function Home() {
 			const { data } = await axios.get('http://localhost:4000/recipes');
 			setRecipes(data);
 		} catch (error) {
-			console.log(error);
+			toast.error(error.message);
 		}
 	};
 
@@ -49,7 +50,7 @@ export default function Home() {
 			);
 			setSavedRecipes(data.savedRecipes);
 		} catch (error) {
-			console.log(error);
+			toast.error(error.message);
 		}
 	};
 

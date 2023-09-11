@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export default function SavedRecipe() {
 	const [savedRecipes, setSavedRecipes] = useState([]);
@@ -8,16 +9,19 @@ export default function SavedRecipe() {
 	const userId = localStorage.getItem('userId');
 
 	const fetchSavedRecipes = async () => {
-		const { data } = await axios.get(
-			`http://localhost:4000/recipes/savedRecipes/${userId}`,
-			{
-				headers: {
-					authorization: cookies.access_token,
-				},
-			}
-		);
-
-		setSavedRecipes(data.savedRecipes);
+		try {
+			const { data } = await axios.get(
+				`http://localhost:4000/recipes/savedRecipes/${userId}`,
+				{
+					headers: {
+						authorization: cookies.access_token,
+					},
+				}
+			);
+			setSavedRecipes(data.savedRecipes);
+		} catch (error) {
+			toast.error(error.message);
+		}
 	};
 
 	useEffect(() => {

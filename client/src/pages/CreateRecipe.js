@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import { toast } from 'react-toastify';
 
 export default function CreateRecipe() {
 	const navigate = useNavigate();
@@ -40,10 +41,10 @@ export default function CreateRecipe() {
 					authorization: cookies.access_token,
 				},
 			});
-			alert('Recipe Created');
+			toast.success('Recipe has been created');
 			navigate('/');
 		} catch (error) {
-			console.log(error);
+			toast.error(error.message);
 		}
 	};
 
